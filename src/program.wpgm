@@ -1,0 +1,52 @@
+import wollok.game.*
+import pacman.*
+
+program pacman {
+	var activo = pacman
+	var pasivo = fantasma
+	
+	keyboard.m().onPressDo({
+			activo = fantasma
+			pasivo = pacman
+	})
+	
+	keyboard.t().onPressDo({
+			pasivo = fantasma
+			activo = pacman
+	})
+	
+	game.width(30)
+	game.height(20)
+	
+	game.boardGround("pacmanBackground.jpg")
+	game.addVisualCharacter(pacman)
+	game.addVisualCharacter(fantasma)
+	
+	
+	keyboard.w().onPressDo({
+		activo.arriba()
+	})
+	keyboard.a().onPressDo({
+		activo.izq()
+	})
+	keyboard.s().onPressDo({
+		activo.abajo()
+	})
+	keyboard.d().onPressDo({
+		activo.der()
+	})
+	
+	game.onCollideDo(activo,{
+		rival => activo.chocarCon(pasivo)
+		if(pacman.vidas() == 0){
+			game.stop()
+		}
+	})
+	
+	game.onTick(1.randomUpTo(5)*50,"movimiento",{
+		fantasma.acercarseA(pacman)
+	})
+	
+	game.start()
+	
+}
